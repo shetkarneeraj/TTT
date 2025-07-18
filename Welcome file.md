@@ -536,6 +536,46 @@ This DFA switches states on `a` and self-loops on `b`, but still rejects all str
 A new counterexample drives the addition of states `q2` and `q3`.
 - **Counterexample**: `"aaa"` (reused, as DFA 2 rejects it: `q0 --a--> q1 --a--> q0 --a--> q1`, non-final).
 - **RS Decomposition**:
+The rs_eager_search function performs a **binary search** to find the index i in a counterexample string where the hypothesis DFA and the target DFA produce different outputs for a specific condition, defined by the function alpha. This index represents the point of divergence, which is critical for the RS decomposition process in the TTT algorithm. RS decomposition breaks a counterexample ww into parts uu, aa, and vv (where w=uavw=uav) to pinpoint where the hypothesis fails, allowing targeted refinement of the DFA or discrimination tree.
+```Python
+def  rs_eager_search(self, alpha: Callable[[int],  bool], high: int, low: int  =  0) -> int:
+
+"""
+
+Performs an eager Rivest-Schapire search to find the exact index i where
+
+alpha(i) != alpha(i+1), indicating the divergence point in the counterexample.
+
+Uses memoization to cache alpha results for efficiency.
+
+Args:
+
+alpha: A function that checks if the hypothesis and target agree at index i.
+
+high: The upper bound of the search.
+
+low: The lower bound of the search (default 0).
+
+Returns:
+The index i where alpha(i) != alpha(i+1).
+"""
+def  beta(i: int) -> int:
+	# Check cache for alpha(i) and alpha(i+1)
+	if  i  not  in  self.alpha_cache:
+		self.alpha_cache[i]  =  alpha(i)
+	if  i  +  1  not  in  self.alpha_cache:
+		self.alpha_cache[i  +  1]  =  alpha(i  +  1)
+	return  self.alpha_cache[i]  +  self.alpha_cache[i  +  1]
+	while  high  >  low:
+	mid  =  (low  +  high)  //  2
+	if  beta(mid)  ==  1: # alpha(mid) != alpha(mid+1)
+	return  mid
+	elif  beta(mid)  ==  0: # beta(mid+1) <= 1
+	low  =  mid  +  1
+	else: # beta(mid - 1) >= 1
+	high  =  mid  -  1
+	return  low
+```
   - \( w = "aaa" \).
   - \( u = "aa" \), \( a = "a" \), \( v = "" \):
     - `q0 --a--> q1 --a--> q0`.
@@ -647,5 +687,5 @@ The TTT algorithm represents a significant improvement over L* for learning regu
 - Isberner, M., Howar, F., & Steffen, B. (2014). _The TTT Algorithm: A Redundancy-Free Approach to Active Automata Learning_. Springer, Cham. https://doi.org/10.1007/978-3-319-11164-3_26
 - Angluin, D. (1987). _Learning Regular Sets from Queries and Counterexamples_. Information and Computation, 75(2), 87–106.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3ODEwMTk2NzddfQ==
+eyJoaXN0b3J5IjpbLTIyMzQxMjk4NywtMTc4MTAxOTY3N119
 -->
