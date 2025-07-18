@@ -1,3 +1,4 @@
+
 ---
 
 
@@ -1366,5 +1367,5 @@ The TTT algorithm represents a significant improvement over L* for learning regu
 - Isberner, M., Howar, F., & Steffen, B. (2014). _The TTT Algorithm: A Redundancy-Free Approach to Active Automata Learning_. Springer, Cham. https://doi.org/10.1007/978-3-319-11164-3_26
 - Angluin, D. (1987). _Learning Regular Sets from Queries and Counterexamples_. Information and Computation, 75(2), 87–106.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNTAzNTg5NDVdfQ==
+eyJoaXN0b3J5IjpbMjY4NDIzNTY1XX0=
 -->
